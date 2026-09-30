@@ -1,0 +1,16 @@
+[run]
+source = .
+omit =
+    venv/*
+    */migrations/*
+    */tests.py
+    */tests/*
+    conftest.py
+    manage.py
+    travel_api/asgi.py
+    travel_api/wsgi.py
+
+[report]
+show_missing = True
+skip_covered = False
+fail_under = 75

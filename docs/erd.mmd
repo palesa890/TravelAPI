@@ -1,0 +1,122 @@
+erDiagram
+    USER {
+        bigint id PK
+        string username UK
+        string email
+        string travel_style
+        image profile_picture
+    }
+    CATEGORY {
+        bigint id PK
+        string name UK
+    }
+    DESTINATION {
+        bigint id PK
+        string name
+        string slug UK
+        string country
+        string city
+        string climate
+        decimal average_cost_per_day
+        bigint category_id FK
+    }
+    DESTINATION_PHOTO {
+        bigint id PK
+        bigint destination_id FK
+        bigint uploaded_by_id FK
+        image image
+    }
+    SEARCH_PREFERENCE {
+        bigint id PK
+        bigint user_id FK
+        string scope
+        string query
+    }
+    ITINERARY {
+        bigint id PK
+        bigint owner_id FK
+        bigint destination_id FK
+        string title
+        date start_date
+        date end_date
+        string status
+    }
+    COLLABORATION {
+        bigint id PK
+        bigint itinerary_id FK
+        bigint user_id FK
+        string role "EDITOR or VIEWER"
+    }
+    DAILY_PLAN {
+        bigint id PK
+        bigint itinerary_id FK
+        int day_number
+        date date
+    }
+    TRIP_DOCUMENT {
+        bigint id PK
+        bigint itinerary_id FK
+        file file
+        string document_type
+    }
+    ACCOMMODATION {
+        bigint id PK
+        bigint destination_id FK
+        string name
+        decimal price_per_night
+    }
+    ACTIVITY {
+        bigint id PK
+        bigint destination_id FK
+        string title
+        decimal price
+    }
+    BOOKING {
+        bigint id PK
+        bigint user_id FK
+        bigint itinerary_id FK
+        bigint accommodation_id FK
+        bigint activity_id FK
+        string status
+        decimal total_price
+    }
+    BUDGET {
+        bigint id PK
+        bigint itinerary_id FK "unique (1:1)"
+        decimal total_budget
+        string currency
+    }
+    EXPENSE {
+        bigint id PK
+        bigint budget_id FK
+        decimal amount
+        string category
+    }
+    REVIEW {
+        bigint id PK
+        bigint user_id FK
+        bigint destination_id FK
+        int rating "1-5"
+    }
+
+    USER ||--o{ ITINERARY : owns
+    USER ||--o{ COLLABORATION : "is collaborator"
+    ITINERARY ||--o{ COLLABORATION : "shared through"
+    USER }o--o{ DESTINATION : favorites
+    USER ||--o{ BOOKING : makes
+    USER ||--o{ REVIEW : writes
+    USER ||--o{ SEARCH_PREFERENCE : saves
+    CATEGORY |o--o{ DESTINATION : groups
+    DESTINATION ||--o{ ITINERARY : "visited by"
+    DESTINATION ||--o{ ACCOMMODATION : has
+    DESTINATION ||--o{ ACTIVITY : offers
+    DESTINATION ||--o{ DESTINATION_PHOTO : has
+    DESTINATION ||--o{ REVIEW : receives
+    ITINERARY ||--o{ DAILY_PLAN : "split into"
+    DAILY_PLAN }o--o{ ACTIVITY : schedules
+    ITINERARY ||--o{ BOOKING : contains
+    ITINERARY ||--o{ TRIP_DOCUMENT : stores
+    ITINERARY ||--o| BUDGET : has
+    BUDGET ||--o{ EXPENSE : tracks
+    ACCOMMODATION |o--o{ BOOKING : "booked in"
+    ACTIVITY |o--o{ BOOKING : "booked in"
